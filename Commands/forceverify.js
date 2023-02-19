@@ -78,7 +78,9 @@ module.exports = {
                      interaction.deleteReply()
                  }, 3000)
                  interaction.editReply({ content: `**SUCCESS** | You have successfully force verified ${username}` })
-                } 
+                } else {
+                    interaction.editReply({ content: `**ERROR** | Failed to force verify ${username}`})
+                }
 
             } catch (err) {
                 console.log(err.message)
