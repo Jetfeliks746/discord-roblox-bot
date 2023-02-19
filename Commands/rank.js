@@ -67,8 +67,10 @@ module.exports = {
                 let findRole2 = role.name
                 const role3 = await interaction.guild.roles.cache.find(r => r.name.includes(findRole))
                 const role4 = await interaction.guild.roles.cache.find(r => r.name.includes(findRole2))
+                if (!(id === userinfo)){
                 await person.roles.add(role3.id);
                 await person.roles.remove(role4.id);
+                }
                 }
             }
                 let group = await noblox.getGroup(process.env.GroupID);
@@ -76,7 +78,7 @@ module.exports = {
                 let groupOwner = group.owner.username;
               let avatar = await noblox.getPlayerThumbnail(id, "48x48", "png", true, "headshot");
       let avatarurl = avatar[0].imageUrl;
-                if ((role.rank) <= MaxRankbelowBot && (role.rank) >= 1 && !(username.id === userinfo)) {
+                if ((role.rank) <= MaxRankbelowBot && (role.rank) >= 1 && !(id === userinfo)) {
                   let embed = new EmbedBuilder()
                   .setTitle(`**Rank Management!**`)
                   .setDescription(`**Username:**\n${username}\n**UserId:**\n${id}\n**Rank Management Type:**\nSet Rank\n**New Rank:**\n${ranks}\n**Command Used By:**`)
