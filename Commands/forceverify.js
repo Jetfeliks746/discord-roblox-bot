@@ -70,8 +70,12 @@ module.exports = {
                  let findRole2 = role1.name
                  const role = await interaction.guild.roles.cache.find(r => r.name.includes(findRole))
                  const role2 = await interaction.guild.roles.cache.find(r => r.name.includes(findRole2))
+                 if (role && role2){
                  await member.roles.add(role.id);
                  await member.roles.add(role2.id);
+                 } else {
+                     interaction.editReply({ content: `**ERROR** | Failed to force verify ${username}`})
+                 }
                  if (!member.manageable) return interaction.editReply({ embeds: [embed3]})
                  member.setNickname(username)
                  setTimeout(() => {
