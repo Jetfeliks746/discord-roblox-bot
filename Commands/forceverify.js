@@ -59,7 +59,6 @@ module.exports = {
             let rblx = bot.db.get(`RobloxInfo_${interaction.guild.id}_${member.id}.robloxusername`);
             let rblxid = bot.db.get(`RobloxInfo_${interaction.guild.id}_${member.id}.robloxid`);
                 if (rblx) return interaction.editReply({ embeds: [embed4]})
-                 bot.db.set(`RobloxInfo_${interaction.guild.id}_${member.id}`, { discordid: member.id, robloxid: id, robloxusername: username })
                  let embed3 = new EmbedBuilder()
                  .setTitle('**Money Devs Verification!**')
                  .setColor('Blue')
@@ -73,6 +72,7 @@ module.exports = {
                  if (role && role2){
                  await member.roles.add(role.id);
                  await member.roles.add(role2.id);
+                 bot.db.set(`RobloxInfo_${interaction.guild.id}_${member.id}`, { discordid: member.id, robloxid: id, robloxusername: username })
                  } else {
                      interaction.editReply({ content: `**ERROR** | Failed to force verify ${username}`})
                  }
