@@ -81,6 +81,12 @@
     <h3>Note: Your Bot will only go Offline if your code has an error or it sent too many requests and is getting rate limited. Rate limits shouldn't be a problem though.</h3>
   </ul>
 </p>
+<h2>Don't forget to Download Visual Studio Code if you don't have it already!</h2>
+<p>
+<ul>
+<li>Go to this <a href="https://code.visualstudio.com/Download">link</a> and select the one for your system.</li>
+</ul>
+</p>
 </body>
 <footer>
   <p><i>Created By:</i> AEW745  <i>&copy2023 All Rights Reserved.</p>
