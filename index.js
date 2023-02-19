@@ -78,12 +78,10 @@ bot.on('ready', async() => {
     await rbxbot.setCookie(process.env.Cookie)
     .then(async(success) => { // Required if the group's shout is private
         console.log(`${await rbxbot.getCurrentUser("UserName")} Logged in.`);
-        bot.once('ready', async() => {
         let avatar = await rbxbot.getPlayerThumbnail(`${await rbxbot.getCurrentUser("UserId")}`, "48x48", "png", true, "headshot");
     let avatarurl = avatar[0].imageUrl;
     await bot.user.setAvatar(avatarurl)
     await bot.user.setUsername(await rbxbot.getCurrentUser("UserName"))
-        })
     let group = await rbxbot.getGroup(process.env.GroupID);
     let groupName = group.name;
     console.log(`${bot.user.username} is Running`)
