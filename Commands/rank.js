@@ -50,9 +50,9 @@ module.exports = {
                 const id = await noblox.getIdFromUsername(username)
                 const rank = await noblox.getRankInGroup(process.env.GroupID, id)
                 const role = await noblox.getRole(process.env.GroupID, rank)
-                const groupbot = await rbxbot.getCurrentUser("UserID")
-                const botrank = await rbxbot.getRankInGroup(process.env.GroupID, groupbot)
-                const botrole = await rbxbot.getRole(process.env.GroupID, botrank)
+                const groupbot = await noblox.getCurrentUser("UserID")
+                const botrank = await noblox.getRankInGroup(process.env.GroupID, groupbot)
+                const botrole = await noblox.getRole(process.env.GroupID, botrank)
                 const MaxRankbelowBot = botrole.rank - 1;
                 let users = (await interaction.guild.members.fetch())
             let member_ids = users.map(m => m.user.id);
