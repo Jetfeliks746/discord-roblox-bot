@@ -57,8 +57,10 @@ module.exports = {
                 let findRole2 = role.name
                 const role3 = await interaction.guild.roles.cache.find(r => r.name.includes(findRole))
                 const role4 = await interaction.guild.roles.cache.find(r => r.name.includes(findRole2))
+                if (!(id === userinfo)){
                 await person.roles.add(role3.id);
                 await person.roles.remove(role4.id);
+                }
                 }
             }
                 let group = await noblox.getGroup(process.env.GroupID);
