@@ -68,7 +68,9 @@ module.exports = {
                      interaction.deleteReply()
                  }, 3000)
                  interaction.editReply({ content: `**SUCCESS** | You have successfully removed verification from ${username}` })
-                } 
+                } else {
+                    interaction.editReply({ content: `**ERROR** | Failed to un-force verify ${username}`})
+                }
 
             } catch (err) {
                 console.log(err.message)
