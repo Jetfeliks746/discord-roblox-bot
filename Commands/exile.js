@@ -45,6 +45,7 @@ module.exports = {
             const reason = interaction.options.getString('reason') || "No Reason Provided!"
             const exilechannel = await bot.guilds.cache.get(ids).channels.cache.get(process.env.LogChannelID)
             let userinfo = bot.db.get(`RobloxInfo_${interaction.guild.id}_${interaction.member.id}.robloxid`)
+            let currentuser = bot.db.get(`RobloxInfo_${interaction.guild.id}_${interaction.member.id}.robloxusername`)
             await interaction.deferReply({ephemeral: true})
             try {
                 const id = await noblox.getIdFromUsername(username)
@@ -54,6 +55,10 @@ module.exports = {
                 const botrank = await noblox.getRankInGroup(process.env.GroupID, groupbot)
                 const botrole = await noblox.getRole(process.env.GroupID, botrank)
                 const MaxRankforExiling = botrole.rank - 2;
+                const currentuserid = await noblox.getIdFromUsername(currentuser)
+                const currentuserrank = await noblox.getRankInGroup(process.env.GroupID, currentuserid)
+                const currentuserrole = await noblox.getRole(process.env.GroupID, currentuserrank)
+                const userrunningcommand = currentuserrole.rank - 1;
                 let group = await noblox.getGroup(process.env.GroupID);
                 let groupName = group.name;
                 let groupOwner = group.owner.username;
@@ -73,10 +78,9 @@ module.exports = {
                   .setAuthor({ name: username, iconURL: avatarurl })
                   .setFooter({ text: interaction.member.user.username, iconURL: interaction.member.user.displayAvatarURL() })
                   .setTimestamp(Date.now());
-                if ((role.rank) >= MaxRankforExiling && !(username.id === userinfo)) {
+                if ((role.rank) >= MaxRankforExiling && (role.rank) >= userrunningcommand && !(username.id === userinfo)) {
                 noblox.message(id, `${groupName} Exile`, `Hello ${username}, You have been Exiled in ${groupName} for ${reason}! If you have any questions please contact ${groupOwner} or Co-Owners of the Group.`)
                 noblox.exile(process.env.GroupID, id)
-                console.log(`${username} was Exiled for ${reason}`)
                 interaction.editReply({ content: `Successfully Exiled **${username}** from the Roblox Group!`,
             })
                 interaction.channel.send({ embeds: [embed2] })
