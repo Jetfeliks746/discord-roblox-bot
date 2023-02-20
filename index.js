@@ -3,7 +3,7 @@ const rbxbot = require('noblox.js');
 const { readdirSync } = require('fs')
 const express = require('express');
 const app = express();
-const port = 80;
+const port = 90;
 const pogger = require('pogger');
 const colors = require('colors');
 const db = require('quick.db');
@@ -68,26 +68,25 @@ for (const event of events) {
     bot.on(name, file.execute.bind(null, bot))
 }
 
-//console.log(bot.commands)
-
 
 bot.on('ready', async() => {
     let ids = bot.guilds.cache.map(guild => guild.id).join(", "); 
     //let icons = bot.guilds.cache.map(guild => guild.iconURL()).join(", ");
-  
+
     await rbxbot.setCookie(process.env.Cookie)
     .then(async(success) => { // Required if the group's shout is private
         console.log(`${await rbxbot.getCurrentUser("UserName")} Logged in.`);
         let avatar = await rbxbot.getPlayerThumbnail(`${await rbxbot.getCurrentUser("UserId")}`, "48x48", "png", true, "headshot");
     let avatarurl = avatar[0].imageUrl;
-    await bot.user.setAvatar(avatarurl)
+
+    bot.db.set(`BotAvatar_${ids}.botavatar`, { avatarurl })
+    let getbotavatar = bot.db.get(`BotAvatar_${ids}.botavatar.avatarurl`)
+    await bot.user.setAvatar(getbotavatar)
     await bot.user.setUsername(await rbxbot.getCurrentUser("UserName"))
     let group = await rbxbot.getGroup(process.env.GroupID);
     let groupName = group.name;
     console.log(`${bot.user.username} is Running`)
     bot.user.setPresence({ activities: [{ name: groupName, type: Number(process.env.ActivityType) }], status: 'dnd'})
-        /*const groupmembers = await rbxbot.getGroup(process.env.GroupID)
-        console.log(groupmembers)*/
             bot.on('interactionCreate', async interaction => {
                 if (!interaction.isAutocomplete()) return;
                 
@@ -348,7 +347,6 @@ app.listen(port, () =>
     .setFooter({ text: groupName })
     .setTimestamp(Date.now())
     shoutchannel.send({ embeds: [embed] }, ms(Time))
-    console.log(`${post.poster.username} posted ${post.body}`)
 }); 
  
 onShout.on('error', function (err) {
