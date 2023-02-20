@@ -34,6 +34,7 @@ module.exports = {
             try {
                 const id = await noblox.getIdFromUsername(username)
                 let userinfo = bot.db.get(`RobloxInfo_${interaction.guild.id}_${interaction.member.id}.robloxid`)
+                let currentuser = bot.db.get(`RobloxInfo_${interaction.guild.id}_${interaction.member.id}.robloxusername`)
                 const rank = await noblox.getRankInGroup(process.env.GroupID, id)
                 const role = await noblox.getRole(process.env.GroupID, rank)
                 let newrank = role.rank + 1;
@@ -42,6 +43,10 @@ module.exports = {
                 const botrank = await noblox.getRankInGroup(process.env.GroupID, groupbot)
                 const botrole = await noblox.getRole(process.env.GroupID, botrank)
                 const MaxRankbelowBot = botrole.rank - 1;
+                const currentuserid = await noblox.getIdFromUsername(currentuser)
+                const currentuserrank = await noblox.getRankInGroup(process.env.GroupID, currentuserid)
+                const currentuserrole = await noblox.getRole(process.env.GroupID, currentuserrank)
+                const userrunningcommand = currentuserrole.rank - 1;
                 let users = (await interaction.guild.members.fetch())
             let member_ids = users.map(m => m.user.id);
             member_ids.forEach(consoleItem)
@@ -49,13 +54,12 @@ module.exports = {
                 let users = bot.db.get(`RobloxInfo_${interaction.guild.id}_${item}.robloxusername`)
                 let members = bot.db.get(`RobloxInfo_${interaction.guild.id}_${item}.discordid`)
                 if (username == users) {
-                console.log(members)
                 const person = await interaction.guild.members.fetch(members)
                 let findRole = newrole.name
                 let findRole2 = role.name
                 const role3 = await interaction.guild.roles.cache.find(r => r.name.includes(findRole))
                 const role4 = await interaction.guild.roles.cache.find(r => r.name.includes(findRole2))
-                if (!(id === userinfo)){
+                if (!(id === userinfo) && (newrole.rank) < userrunningcommand) {
                 await person.roles.add(role3.id);
                 await person.roles.remove(role4.id);
                 }
@@ -66,7 +70,7 @@ module.exports = {
                 let groupOwner = group.owner.username;
               let avatar = await noblox.getPlayerThumbnail(id, "48x48", "png", true, "headshot");
                 let avatarurl = avatar[0].imageUrl;
-                if ((role.rank) >= 1 && (role.rank) < MaxRankbelowBot && !(id === userinfo)) {
+                if ((role.rank) >= 1 && (role.rank) < MaxRankbelowBot && (newrole.rank) < userrunningcommand && !(id === userinfo)) {
                   let embed = new EmbedBuilder()
                   .setTitle(`**Rank Management!**`)
                   .setDescription(`**Username:**\n${username}\n**UserId:**\n${id}\n**Rank Management Type:**\nPromote\n**New Rank:**\n${newrole.name}\n**Command Used By:**`)
