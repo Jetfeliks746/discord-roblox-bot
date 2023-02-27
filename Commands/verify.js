@@ -43,10 +43,12 @@ module.exports = {
         const role1 = await noblox.getRole(process.env.GroupID, rank)
             await interaction.deferReply({ephemeral: true})
             function Generate() {
-           let tokenID = '';
-           let randomstuff = ['bus', 'truck', 'van', 'bike', 'train'];
-           tokenID += randomstuff[Math.floor(Math.random() * randomstuff.length)];
-           return tokenID;
+           let tokenID = [];
+           let randomstuff = ['0', '2', '3', '4', '5', '6', '7', '8', '9'];
+           for (let x = 1; x <= 6; x++) {
+           tokenID.push(randomstuff[Math.floor(Math.random() * randomstuff.length)]);
+           }
+           return tokenID.join(' ');
             }
             const string = Generate()
             try {
@@ -54,11 +56,11 @@ module.exports = {
                     let embed = new EmbedBuilder()
                     .setTitle('**Money Devs Verification!**')
                     .setColor('Yellow')
-                    .setDescription(`Hello ${username}, To continue with your Roblox Verification. Please enter the following code into your Roblox Status or Bio: **${string}**`)
-                    .setFooter({ text: `After you've entered your code please come back and say done`, })
+                    .setDescription(`Hello ${username}, To continue with your Roblox Verification. Please enter the following code into your Roblox Status or Bio:\n**${string}**`)
+                    .setFooter({ text: `After you've entered your code please come back and click done`, })
                     .setTimestamp(Date.now())
                  interaction.editReply({ embeds: [embed], components: [ new ActionRowBuilder().setComponents( new ButtonBuilder().setCustomId('done').setLabel('done').setStyle(ButtonStyle.Success))]  })
-                } 
+                }
 
                 const filter = i => i.customId === 'done' && i.user.id === interaction.member.id;
 
