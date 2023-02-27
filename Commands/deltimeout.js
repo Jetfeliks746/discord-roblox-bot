@@ -36,7 +36,7 @@ module.exports = {
          */
         async slashexecute(bot, interaction) {
             const username = interaction.options.getUser('username')
-            let duration = 0
+            let duration = null;
             await interaction.deferReply({ephemeral: true})
                 
             try {
