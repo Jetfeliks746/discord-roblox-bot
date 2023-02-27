@@ -3,7 +3,7 @@ const rbxbot = require('noblox.js');
 const { readdirSync } = require('fs')
 const express = require('express');
 const app = express();
-const port = 90;
+const port = 80; //Change this to the port of your Webserver to connect your game commands to the Bot.
 const pogger = require('pogger');
 const colors = require('colors');
 const db = require('quick.db');
@@ -274,8 +274,8 @@ bot.on('ready', async() => {
             })
             }
         }
-
                 });
+
 
     app.get("/ranker", async(req, res) => {
     var User = req.param("userid");
@@ -302,9 +302,16 @@ app.get("/promote", async(req, res) => {
     let group = await rbxbot.getGroup(process.env.GroupID);
     let groupName = group.name;
     let groupOwner = group.owner.username;
+    const groupbot = await rbxbot.getCurrentUser("UserID")
+    const botrank = await rbxbot.getRankInGroup(process.env.GroupID, groupbot)
+    const botrole = await rbxbot.getRole(process.env.GroupID, botrank)
+    if ((newrole.rank) < (botrole.rank)) {
     rbxbot.message(User, `${groupName} Promotion`, `Hello ${username}, You have been Promoted in ${groupName} to ${newrole.name} from ${role.name}! If you have any questions please contact ${groupOwner} or the Co-Owners of the Group.`)
     rbxbot.promote(process.env.GroupID, parseInt(User));
     res.json("Promoted!");
+    } else {
+        console.log("Failed to Promote User!")
+    }
 });
 
 app.get("/demote", async(req, res) => {
@@ -317,9 +324,13 @@ app.get("/demote", async(req, res) => {
     let group = await rbxbot.getGroup(process.env.GroupID);
     let groupName = group.name;
     let groupOwner = group.owner.username;
+    if ((newrole.rank) >= 1){
     rbxbot.message(User, `${groupName} Demotion`, `Hello ${username}, You have been Demoted in ${groupName} to ${role.name} from ${newrole.name}! If you have any questions please contact ${groupOwner} or the Co-Owners of the Group.`)
     rbxbot.demote(process.env.GroupID, parseInt(User));
     res.json("Demoted!");
+    } else {
+        console.log("Failed to Demote User!")
+    }
 });
       
 app.get("/shouts", (req, res) => {
