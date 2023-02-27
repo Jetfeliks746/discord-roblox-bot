@@ -50,12 +50,18 @@ module.exports = {
                 const currentuserrank = await noblox.getRankInGroup(process.env.GroupID, currentuserid)
                 const currentuserrole = await noblox.getRole(process.env.GroupID, currentuserrank)
                 const userrunningcommand = currentuserrole.rank - 1;
-                const getRole = await noblox.getRole(process.env.GroupID, ranks)
-            await interaction.deferReply({ephemeral: true})
+                await interaction.deferReply({ephemeral: true})
             try {
+                const getRole = await noblox.getRole(process.env.GroupID, ranks).catch(function(error) {
+                    return interaction.editReply({ content: `**ERROR** | Please provide a Valid Role!`})
+                })
                 const id = await noblox.getIdFromUsername(username)
-                const rank = await noblox.getRankInGroup(process.env.GroupID, id)
-                const role = await noblox.getRole(process.env.GroupID, rank)
+                const rank = await noblox.getRankInGroup(process.env.GroupID, id).catch(function(error){
+                    console.log(`ERROR`, error)
+                })
+                const role = await noblox.getRole(process.env.GroupID, rank).catch(function(error) {
+                    console.log(`ERROR`, error)
+                })
                 const groupbot = await noblox.getCurrentUser("UserID")
                 const botrank = await noblox.getRankInGroup(process.env.GroupID, groupbot)
                 const botrole = await noblox.getRole(process.env.GroupID, botrank)
