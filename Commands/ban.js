@@ -5,6 +5,7 @@ const {
     CommandInteraction,
     MessageActionRow,
     MessageButton,
+    PermissionsBitField,
 } = require('discord.js')
 
 const { SlashCommandBuilder } = require('@discordjs/builders')
@@ -42,10 +43,17 @@ module.exports = {
             try {
               await interaction.guild.members.fetch()
             .then(async members => {
-              let BannedId = members.find(member => member.user.id == username.id);
-              if (!BannedId) return await interaction.editReply({ content: `ERROR | Can't find **${username}** in ${interaction.guild.name}`});
-              if (!BannedId.bannable) return await interaction.editReply({ content: `Failed to Ban **${username}** from the Server!`,
-        })
+                let user = interaction.guild.members.cache.get(username.id);
+                console.log(user.roles.highest.position)
+                let BannedId = members.find(member => member.user.id == username.id);
+                if (!BannedId) return await interaction.editReply({ content: `**ERROR** | Can't find **${username}** in ${interaction.guild.name}`});
+                    if (interaction.member.user === username) return interaction.editReply(`**ERROR** | You can't Ban yourself!`)
+                    if (bot.user === username) return interaction.editReply(`**ERROR** | You can't Ban me!`)
+                    if (!interaction.member.permissions.has(PermissionsBitField.Flags.BanMembers)) return interaction.editReply(`**ERROR** | You don't have permission to use this command!`)
+                    if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.BanMembers)) return interaction.editReply(`**ERROR** | I don't have permission to execute this command!`)
+                    if (interaction.member.moderatable) return interaction.editReply(`**ERROR** | I can't Ban ${username} because they have higher permission levels over me!`)
+                    if (interaction.member.user.bot = username.bot) return interaction.editReply(`**ERROR** | You can't Ban other Bots!`)
+                    if (interaction.member.roles.highest.position < user.roles.highest.position) return interaction.editReply(`**ERROR** | You can't Ban ${username} because they are a Higher Rank than you!`)
                 if (username && reason) {
                   let embed = new EmbedBuilder()
                   .setTitle(`**Moderation Report**`)
@@ -59,7 +67,7 @@ module.exports = {
             })
                   interaction.channel.send({ embeds: [embed] })
         }
-              })
+        })
             } catch (error) {
                 console.log(error.message)
             }
