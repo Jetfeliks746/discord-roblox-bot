@@ -5,6 +5,7 @@ const {
     CommandInteraction,
     MessageActionRow,
     MessageButton,
+    PermissionsBitField,
 } = require('discord.js')
 const db = require('quick.db');
 const { SlashCommandBuilder } = require('@discordjs/builders')
@@ -36,6 +37,14 @@ module.exports = {
             const username = interaction.options.getUser('username')
             await interaction.deferReply({ephemeral: true})
             try {
+                let user = interaction.guild.members.cache.get(username.id);
+                if (interaction.member.user === username) return interaction.editReply(`**ERROR** | You can't Delete warnings from yourself!`)
+                    if (bot.user === username) return interaction.editReply(`**ERROR** | You can't Delete warnings from me!`)
+                    if (!interaction.member.permissions.has(PermissionsBitField.Flags.BanMembers)) return interaction.editReply(`**ERROR** | You don't have permission to use this command!`)
+                    if (!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.BanMembers)) return interaction.editReply(`**ERROR** | I don't have permission to execute this command!`)
+                    if (interaction.member.moderatable) return interaction.editReply(`**ERROR** | I can't Delete ${username} warns because they have higher permission levels over me!`)
+                    if (interaction.member.user.bot = username.bot) return interaction.editReply(`**ERROR** | You can't Delete warnings from other Bots!`)
+                    if (interaction.member.roles.highest.position < user.roles.highest.position) return interaction.editReply(`**ERROR** | You can't Delete ${username} warnings because they are a Higher Rank than you!`)
               let Warnings = bot.db.get(`userWarnings_${interaction.guild.id}_${username.id}.warnings`)
                 if (username && Warnings > 0) {
           bot.db.delete(`userWarnings_${interaction.guild.id}_${username.id}`);
